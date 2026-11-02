@@ -144,6 +144,18 @@ test('renderHome sem nada pendente parabeniza e manda para Revisar', () => {
   assert.match(html, /href="#\/revisar"/);
 });
 
+test('renderHome sem data de prova não mostra contagem nem plano', () => {
+  const html = render.renderHome(modulos, { dias: [{ data: '2026-10-27', aulas: ['m01-a01'] }] }, createStore(null), '2026-10-27',
+    () => undefined, null);
+  assert.doesNotMatch(html, /para a prova|calendario|Plano de estudo|class="plano"/);
+  assert.match(html, /Próxima aula/);
+  assert.match(html, /Seu progresso/);
+});
+
+test('contagem aceita outra data de prova', () => {
+  assert.equal(render.contagem('2026-12-01', '2026-12-03'), '2 dias para a prova');
+});
+
 test('renderLesson mostra o título das aulas vizinhas na navegação', () => {
   const aula = { id: 'm01-a02', titulo: 'Histórico', corpo: '', resumo: '', questoes: [], dissertativas: [] };
   const html = render.renderLesson(aula, { id: 'm01-a02', titulo: 'Histórico', moduloTitulo: 'Introdução', publicada: true },

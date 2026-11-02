@@ -24,8 +24,8 @@
     return `${t.getUTCFullYear()}-${String(t.getUTCMonth() + 1).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
   }
 
-  function contagem(hojeISO) {
-    const n = diasAte(hojeISO, PROVA);
+  function contagem(hojeISO, prova = PROVA) {
+    const n = diasAte(hojeISO, prova);
     if (n > 1) return `${n} dias para a prova`;
     if (n === 1) return '1 dia para a prova';
     if (n === 0) return 'Hoje é a prova';
@@ -80,7 +80,8 @@
     return '';
   }
 
-  function renderHome(modulos, plano, store, hojeISO, lessonLookup = () => undefined) {
+  // prova = null: versão sem data de prova (sem contagem regressiva e sem plano de estudo).
+  function renderHome(modulos, plano, store, hojeISO, lessonLookup = () => undefined, prova = PROVA) {
     const aulas = todasAulas(modulos);
     const porId = Object.fromEntries(aulas.map(a => [a.id, a]));
     const publicadas = aulas.filter(a => a.publicada);
@@ -112,7 +113,7 @@
     } else {
       destaque = `<article class="destaque sem-trecho"><div class="destaque-info">
         <h3>Todas as aulas disponíveis foram concluídas</h3>
-        <p class="destaque-resumo">Use os dias que faltam para refazer as questões que você errou e reler as aulas marcadas.</p>
+        <p class="destaque-resumo">${prova ? 'Use os dias que faltam para refazer' : 'Agora é hora de refazer'} as questões que você errou e reler as aulas marcadas.</p>
         <div class="destaque-rodape"><span></span><a class="botao" href="#/revisar">Abrir Revisar</a></div>
       </div></article>`;
     }
@@ -144,11 +145,11 @@
       </a></li>`;
     }).join('');
 
-    const faltam = diasAte(hojeISO, PROVA);
+    const faltam = prova ? diasAte(hojeISO, prova) : -1;
     const quadros = [];
-    for (let i = 0; i <= Math.min(Math.max(faltam, 0), 13); i++) {
+    for (let i = 0; prova && i <= Math.min(Math.max(faltam, 0), 13); i++) {
       const iso = somaDias(hojeISO, i);
-      const classe = iso === PROVA ? 'prova' : i === 0 ? 'hoje' : '';
+      const classe = iso === prova ? 'prova' : i === 0 ? 'hoje' : '';
       quadros.push(`<li class="${classe}" title="${dataExtensa(iso)}"><span>${SEMANA[diaDaSemana(iso)][0].toUpperCase()}</span><small>${partes(iso)[2]}</small></li>`);
     }
     const erradas = store.getWrong().length;
@@ -157,19 +158,19 @@
     return `<div class="home">
       <div class="home-principal">
         <header class="secao-cabeca"><h2>Próxima aula</h2><p>${dataExtensa(hojeISO)}</p></header>
-        ${plano.mensagem ? `<p class="aviso">${esc(plano.mensagem)}</p>` : ''}
+        ${prova && plano.mensagem ? `<p class="aviso">${esc(plano.mensagem)}</p>` : ''}
         ${destaque}
-        <header class="secao-cabeca"><h2>Plano de estudo</h2><p>Cada aula termina com questões para treinar.</p></header>
-        <ol class="plano">${dias}</ol>
+        ${prova ? `<header class="secao-cabeca"><h2>Plano de estudo</h2><p>Cada aula termina com questões para treinar.</p></header>
+        <ol class="plano">${dias}</ol>` : ''}
         <header class="secao-cabeca"><h2>Módulos</h2></header>
         <ol class="lista-modulos">${mods}</ol>
       </div>
       <aside class="home-lateral">
-        <section class="painel contagem">
+        ${prova ? `<section class="painel contagem">
           <p class="contagem-numero">${faltam > 0 ? `<strong>${faltam} ${faltam === 1 ? 'dia' : 'dias'}</strong>` : `<strong>${faltam === 0 ? 'Hoje' : 'Prova feita'}</strong>`}</p>
-          <p class="contagem-legenda">${faltam > 0 ? `para a prova (${dataExtensa(PROVA)})` : contagem(hojeISO)}</p>
+          <p class="contagem-legenda">${faltam > 0 ? `para a prova (${dataExtensa(prova)})` : contagem(hojeISO, prova)}</p>
           ${quadros.length ? `<ol class="calendario" aria-label="Dias até a prova">${quadros.join('')}</ol>` : ''}
-        </section>
+        </section>` : ''}
         <section class="painel">
           <h2>Seu progresso</h2>
           <p class="painel-numero"><strong>${feitas}</strong> de ${aulas.length} aulas concluídas</p>

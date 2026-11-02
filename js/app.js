@@ -10,6 +10,8 @@
   const elConteudo = $('#conteudo');
   const elSidebar = $('#sidebar');
   const falharam = new Set();
+  // Data da prova vem da <meta name="so1-prova">; sem ela, não há contagem regressiva nem plano de estudo.
+  const PROVA = ($('meta[name="so1-prova"]') || {}).content || null;
 
   function hojeISO() {
     const d = new Date();
@@ -50,8 +52,11 @@
     document.querySelectorAll('.menu-topo a').forEach(a => {
       if (a.dataset.rota === r.tipo) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
-    const texto = render.contagem(hojeISO());
-    $('#contagem-topo').innerHTML = `<span class="longo">${texto}</span><span class="curto">${texto.replace(' para a prova', '')}</span>`;
+    const elContagem = $('#contagem-topo');
+    if (PROVA) {
+      const texto = render.contagem(hojeISO(), PROVA);
+      elContagem.innerHTML = `<span class="longo">${texto}</span><span class="curto">${texto.replace(' para a prova', '')}</span>`;
+    } else if (elContagem) elContagem.remove();
 
     if (r.tipo === 'aula') {
       const indice = SO1.lessonIndex();
@@ -76,8 +81,8 @@
       document.title = 'SO1 · Estudo';
       const aulas = modulos.flatMap(m => m.aulas);
       const concluidas = new Set(aulas.filter(a => store.isComplete(a.id)).map(a => a.id));
-      const plano = SO1.plan.buildStudyPlan(aulas, concluidas, hojeISO());
-      elConteudo.innerHTML = render.renderHome(modulos, plano, store, hojeISO(), id => SO1.getLesson(id));
+      const plano = PROVA ? SO1.plan.buildStudyPlan(aulas, concluidas, hojeISO(), PROVA) : { dias: [] };
+      elConteudo.innerHTML = render.renderHome(modulos, plano, store, hojeISO(), id => SO1.getLesson(id), PROVA);
       janelasMac(elConteudo);
     }
     window.scrollTo(0, 0);

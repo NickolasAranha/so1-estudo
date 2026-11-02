@@ -4,7 +4,7 @@ Site de estudo de **Sistemas Operacionais**, organizado como um curso: 10 módul
 
 **Acesse:** _link da Vercel aqui_
 
-![Página inicial com a próxima aula, o plano de estudo e a contagem até a prova](img/inicio.png)
+![Página inicial com a próxima aula, o progresso e os módulos](img/inicio.png)
 
 ## O que tem
 
@@ -13,7 +13,7 @@ Site de estudo de **Sistemas Operacionais**, organizado como um curso: 10 módul
 - **343 questões de múltipla escolha** com explicação para cada alternativa, inclusive as erradas. É preciso acertar 4 de 5 para concluir a aula.
 - **53 questões dissertativas** com resposta-modelo e uma lista de pontos-chave para a autoavaliação.
 - **Exercícios numéricos de escalonamento** (SJF, Round Robin com E/S e troca de contexto) com gabaritos conferidos à mão e por um simulador.
-- **Plano de estudo** distribuído pelos dias até a prova, **progresso** salvo no navegador e uma página **Revisar** que junta as questões erradas e as aulas marcadas.
+- **Progresso** salvo no navegador, a próxima aula em destaque com um trecho dela e uma página **Revisar** que junta as questões erradas e as aulas marcadas.
 
 | Aula com bloco de código | Quiz com verificação |
 |---|---|
