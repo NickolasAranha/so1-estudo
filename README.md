@@ -65,4 +65,11 @@ O texto das aulas, os diagramas e as questões são autorais. As explicações s
 - MACHADO, F. B.; MAIA, L. P. *Arquitetura de Sistemas Operacionais*. 5ª ed. LTC.
 - SILBERSCHATZ, A.; GALVIN, P. B.; GAGNE, G. *Fundamentos de Sistemas Operacionais*. LTC.
 
-Desenvolvido com o auxílio do [Claude Code](https://claude.com/claude-code).
+## Como foi feito
+
+Desenvolvi o projeto usando o [Claude Code](https://claude.com/claude-code) como harness de agentes, escolhendo o modelo e as skills de cada etapa:
+
+1. **Planejamento com o Opus.** Usei a skill *brainstorming* do [superpowers](https://github.com/obra/superpowers) para levantar os requisitos: público, formato das aulas e das questões, restrições técnicas (sem build, funcionar via `file://`) e quais fontes eram confiáveis. Daí saíram uma especificação e um plano de implementação dividido em tarefas.
+2. **Execução com vários agentes no Sonnet.** Com o plano bem definido, a implementação foi distribuída entre subagentes, cada um responsável por uma tarefa ou por um módulo de conteúdo e trabalhando em seu próprio *git worktree*.
+3. **Revisão independente.** Cada módulo passou por um agente revisor separado do autor, que conferiu o conteúdo com a bibliografia e recalculou os exercícios numéricos. No fim, uma revisão cruzada verificou a coerência entre os módulos.
+4. **Validação.** Os testes automatizados rodam a cada mudança, e as 42 aulas foram abertas num Chrome headless, no tema claro e no escuro, no computador e no celular, para checar erros de JavaScript, rolagem horizontal e o fluxo completo do quiz.
