@@ -2,7 +2,7 @@
 
 Site de estudo de **Sistemas Operacionais**, organizado como um curso: 10 módulos, 42 aulas e mais de 390 questões de prática. Construí este site para me preparar para uma prova de proficiência que cobre a ementa inteira da disciplina, de processos e escalonamento até memória virtual e sistemas de arquivos.
 
-**Acesse:** _link da Vercel aqui_
+**Acesse:** [so1-estudo.vercel.app](https://so1-estudo.vercel.app/)
 
 ![Página inicial com a próxima aula, o progresso e os módulos](img/inicio.png)
 
